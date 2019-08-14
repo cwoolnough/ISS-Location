@@ -16,6 +16,17 @@ const issIcon = L.icon({
 
 let marker = L.marker([0, 0], { icon: issIcon }).addTo(mymap);
 
+mymap.on('zoomend', function() {
+  const zoom = mymap.getZoom() + 1;
+  const w = 50 * zoom;
+  const h = 32 * zoom;
+  issIcon.options.iconSize = [w, h];
+  issIcon.options.iconAnchor = [w / 2, h /2];
+  mymap.removeLayer(marker);
+  let latlng = marker.getLatLng();
+  marker = L.marker([0, 0], { icon: issIcon }).addTo(mymap);
+  marker.setLatLng(latlng);
+})
 
 
 const api_url = "https://api.wheretheiss.at/v1/satellites/25544";
@@ -33,8 +44,8 @@ async function getISS() {
     firstTime = false;
   }
   document.getElementById("lat").textContent = latitude.toFixed(2);
-  document.getElementById("long").textContent = longitude.toFixed(2);
+  document.getElementById("lon").textContent = longitude.toFixed(2);
 }
 
 getISS();
-setInterval(getISS, 2000);
+setInterval(getISS, 1000);
